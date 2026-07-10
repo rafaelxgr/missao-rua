@@ -1,0 +1,43 @@
+name: Copiar site Missao Rua
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  copiar-site:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout do repositorio oficial
+        uses: actions/checkout@v4
+
+      - name: Evitar copia repetida
+        run: |
+          if [ -f .site-copied ]; then
+            echo "Site ja foi copiado antes. Nada a fazer."
+            exit 0
+          fi
+
+      - name: Baixar repositorio principal da XGR
+        run: |
+          curl -L "https://github.com/rafaelxgr/rafaelxgr.github.io/archive/refs/heads/main.zip" -o origem.zip
+          unzip -q origem.zip
+
+      - name: Copiar pasta do projeto para a raiz
+        run: |
+          rsync -av --exclude='.git' "rafaelxgr.github.io-main/clientes/missao-rua/" ./
+          echo "missaorua.com.br" > CNAME
+          touch .site-copied
+          rm -rf origem.zip rafaelxgr.github.io-main
+
+      - name: Commit da estrutura oficial
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Copia site Missao Rua para repositorio oficial" || echo "Sem alteracoes para commit"
+          git push
