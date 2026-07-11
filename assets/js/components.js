@@ -6,10 +6,6 @@
   const instagram='https://www.instagram.com/missao.rua/';
   const whatsapp='https://wa.me/551998675130?text=Ol%C3%A1%2C%20gostaria%20de%20falar%20com%20a%20Miss%C3%A3o%20Rua.';
   const pixKey='214.794.088-75';
-  const emailContato='contato@missaorua.com.br';
-  const emailDoacoes='doacoes@missaorua.com.br';
-  const emailParcerias='parcerias@missaorua.com.br';
-  const emailVoluntarios='voluntarios@missaorua.com.br';
   const style=document.createElement('style');
   style.textContent=`
     .site-icon{width:50px;height:50px;border-radius:50%;object-fit:cover;border:3px solid #7c3511;box-shadow:0 8px 22px rgba(126,62,16,.22);background:#ffe4a8}
@@ -21,7 +17,6 @@
     .icon-badge{width:58px;height:58px;border-radius:20px;display:grid;place-items:center;background:linear-gradient(135deg,#fff6df,#f4c766);box-shadow:0 12px 26px rgba(83,45,13,.12);flex:0 0 auto;overflow:hidden;color:#11394a;font-weight:1000}
     .icon-badge img{display:block;max-width:36px;max-height:36px;object-fit:contain}.icon-badge--wide{width:88px}.icon-badge--wide img{max-width:74px;max-height:34px}
     .smart-card h3,.smart-card p,.smart-card a,.smart-card button{position:relative;z-index:1}.smart-card h3{margin-bottom:6px}.smart-card p{margin-bottom:14px}.smart-card .btn{min-height:42px;padding:10px 15px;font-size:.92rem}.copy-status{display:block;margin-top:8px;font-size:.9rem;font-weight:800;color:#826851}
-    .footer-email-list{display:grid;gap:4px;margin:8px 0 14px}.footer-email-list a{color:#f7ddbb;font-weight:850}.footer-email-list a:hover{color:#fff}
     .whatsapp-float{position:fixed!important;right:22px!important;bottom:22px!important;width:52px!important;height:52px!important;display:flex!important;align-items:center!important;justify-content:center!important;z-index:90!important;background:transparent!important;border:0!important;box-shadow:none!important;padding:0!important;margin:0!important;line-height:0!important;overflow:visible!important}
     .whatsapp-float::before{content:none!important;display:none!important}.whatsapp-float svg{display:none!important}.whatsapp-float img{width:48px!important;height:48px!important;object-fit:contain!important;display:block!important;filter:drop-shadow(0 10px 18px rgba(37,211,102,.24))}.whatsapp-float:hover{transform:translateY(-2px)}
     @media(max-width:900px){
@@ -53,7 +48,7 @@
   const headerTarget=document.getElementById('site-header');
   if(headerTarget){headerTarget.innerHTML=`<header class="topbar"><div class="topbar__inner"><a class="brand" href="index.html" aria-label="Página inicial da Missão Rua"><img class="site-icon" src="assets/img/logo-missao.svg" alt=""><span class="brand__text"><strong>Missão Rua</strong><span>Juntos somos mais fortes</span></span></a><div class="topbar__right"><nav class="nav" aria-label="Menu principal">${nav.map(([key,href,label])=>`<a class="${active===key?'active':''}" href="${href}">${label}</a>`).join('')}</nav><a class="header-social" href="${instagram}" target="_blank" rel="noopener noreferrer" aria-label="Instagram oficial da Missão Rua">${iconInstagram}<span class="sr-only">Instagram</span></a></div></div></header>`;}
   const footerTarget=document.getElementById('site-footer');
-  if(footerTarget){footerTarget.innerHTML=`<footer class="footer" style="min-height:160px;padding:70px 0 18px;display:flex;align-items:flex-end;"><div class="footer__inner" style="align-items:end;"><div><strong class="footer__title">Missão Rua</strong><p>Juntos somos mais fortes.</p><a class="footer-social" href="${instagram}" target="_blank" rel="noopener noreferrer">@missao.rua</a><div class="footer-email-list"><a href="mailto:${emailContato}">${emailContato}</a><a href="mailto:${emailDoacoes}">${emailDoacoes}</a></div></div><nav class="footer__links footer__links--policies" aria-label="Políticas"><a href="privacidade.html">Privacidade</a><a href="cookies.html">Cookies</a><a href="termos.html">Termos</a></nav><div><strong class="footer__title">Canais oficiais</strong><div class="footer-email-list"><a href="mailto:${emailParcerias}">${emailParcerias}</a><a href="mailto:${emailVoluntarios}">${emailVoluntarios}</a><a href="${whatsapp}" target="_blank" rel="noopener noreferrer">WhatsApp: +55 19 98675-130</a></div><p class="credit">Site solidário desenvolvido por <a href="https://xgreat.com.br" target="_blank" rel="noopener noreferrer">XGR Digital</a>.</p></div></div></footer>`;}
+  if(footerTarget){footerTarget.innerHTML=`<footer class="footer" style="min-height:160px;padding:70px 0 18px;display:flex;align-items:flex-end;"><div class="footer__inner" style="align-items:end;"><div><strong class="footer__title">Missão Rua</strong><p>Juntos somos mais fortes.</p><a class="footer-social" href="${instagram}" target="_blank" rel="noopener noreferrer">@missao.rua</a></div><nav class="footer__links footer__links--policies" aria-label="Políticas"><a href="privacidade.html">Privacidade</a><a href="cookies.html">Cookies</a><a href="termos.html">Termos</a></nav><div><strong class="footer__title">Projeto solidário</strong><p class="credit">Site solidário desenvolvido por <a href="https://xgreat.com.br" target="_blank" rel="noopener noreferrer">XGR Digital</a>.</p></div></div></footer>`;}
   let wa=document.querySelector('.whatsapp-float');
   if(!wa){wa=document.createElement('a');wa.className='whatsapp-float';document.body.appendChild(wa);}
   wa.href=whatsapp;
