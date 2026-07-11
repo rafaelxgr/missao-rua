@@ -1,0 +1,36 @@
+name: Atualizar versao dos componentes
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  atualizar-versao:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Atualizar referencias do components.js
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          changed = []
+          for path in Path('.').glob('*.html'):
+              text = path.read_text(encoding='utf-8')
+              new = text
+              import re
+              new = re.sub(r'assets/js/components\.js\?v=\d+', 'assets/js/components.js?v=108', new)
+              if new != text:
+                  path.write_text(new, encoding='utf-8')
+                  changed.append(str(path))
+          print('Arquivos atualizados:', changed)
+          PY
+      - name: Commit se houver mudancas
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add *.html
+          git diff --cached --quiet || git commit -m "Atualizar cache dos componentes"
+          git push
