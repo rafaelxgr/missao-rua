@@ -1,6 +1,10 @@
 name: Atualizar versao dos componentes
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/bust-components-cache.yml'
   workflow_dispatch:
 
 permissions:
@@ -16,12 +20,11 @@ jobs:
         run: |
           python - <<'PY'
           from pathlib import Path
+          import re
           changed = []
           for path in Path('.').glob('*.html'):
               text = path.read_text(encoding='utf-8')
-              new = text
-              import re
-              new = re.sub(r'assets/js/components\.js\?v=\d+', 'assets/js/components.js?v=108', new)
+              new = re.sub(r'assets/js/components\.js\?v=\d+', 'assets/js/components.js?v=108', text)
               if new != text:
                   path.write_text(new, encoding='utf-8')
                   changed.append(str(path))
