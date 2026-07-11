@@ -56,10 +56,10 @@
       .smart-grid{grid-template-columns:1fr!important;gap:14px!important}.smart-card{padding:20px!important;gap:14px!important;border-radius:22px!important}.icon-badge{width:52px;height:52px}.icon-badge--wide{width:82px}
       .footer{padding:38px 0 18px!important}.footer__inner{grid-template-columns:1fr!important;gap:24px!important;align-items:start!important;width:min(100% - 28px,1180px)!important}
       .whatsapp-float{right:16px!important;bottom:16px!important;width:46px!important;height:46px!important}.whatsapp-float img{width:42px!important;height:42px!important}
-      .back-to-top{width:56px;height:56px;border-color:rgba(255,255,255,.9);background:linear-gradient(145deg,rgba(255,255,255,.82),rgba(255,232,198,.56));box-shadow:0 16px 44px rgba(48,26,11,.22),0 0 0 6px rgba(255,255,255,.12),inset 0 1px 0 rgba(255,255,255,.96);backdrop-filter:blur(18px) saturate(145%);-webkit-backdrop-filter:blur(18px) saturate(145%)}
-      .back-to-top svg{width:27px;height:27px;stroke-width:2.45}
+      .back-to-top{width:46px;height:46px;border-color:rgba(255,255,255,.9);background:linear-gradient(145deg,rgba(255,255,255,.82),rgba(255,232,198,.56));box-shadow:0 13px 34px rgba(48,26,11,.19),0 0 0 4px rgba(255,255,255,.1),inset 0 1px 0 rgba(255,255,255,.96);backdrop-filter:blur(16px) saturate(140%);-webkit-backdrop-filter:blur(16px) saturate(140%)}
+      .back-to-top svg{width:22px;height:22px;stroke-width:2.4}
     }
-    @media(max-width:430px){.nav{grid-template-columns:1fr 1fr!important}.nav a{font-size:.86rem!important}.site-icon{width:44px!important;height:44px!important}.hero{padding-top:36px!important}h1{font-size:clamp(2.45rem,16vw,4.2rem)!important}.kicker{font-size:.72rem!important;padding:12px 18px!important}.lead{font-size:1rem!important}.header-social{top:2px!important;width:44px!important;height:44px!important}.topbar__inner{padding-right:54px!important}.whatsapp-float{width:42px!important;height:42px!important}.whatsapp-float img{width:38px!important;height:38px!important}.back-to-top{width:54px;height:54px}}
+    @media(max-width:430px){.nav{grid-template-columns:1fr 1fr!important}.nav a{font-size:.86rem!important}.site-icon{width:44px!important;height:44px!important}.hero{padding-top:36px!important}h1{font-size:clamp(2.45rem,16vw,4.2rem)!important}.kicker{font-size:.72rem!important;padding:12px 18px!important}.lead{font-size:1rem!important}.header-social{top:2px!important;width:44px!important;height:44px!important}.topbar__inner{padding-right:54px!important}.whatsapp-float{width:42px!important;height:42px!important}.whatsapp-float img{width:38px!important;height:38px!important}.back-to-top{width:44px;height:44px}.back-to-top svg{width:21px;height:21px}}
     @media(prefers-reduced-motion:reduce){.back-to-top{transition:opacity .15s ease,visibility .15s ease}.back-to-top:hover,.back-to-top:active{transform:translate(-50%,0) scale(1)}}
   `;
   document.head.appendChild(style);
@@ -130,7 +130,7 @@
   const updateBackTopVisibility=function(){backTop.classList.toggle('is-visible',window.scrollY>420);};
   const updateBackTopOffset=function(){
     const banner=document.getElementById('cookieBanner');
-    let bottom=window.innerWidth<=900?14:22;
+    let bottom=window.innerWidth<=900?82:22;
     if(banner&&!banner.classList.contains('is-hidden')&&getComputedStyle(banner).display!=='none'){
       const rect=banner.getBoundingClientRect();
       if(rect.height>0&&rect.bottom>0){bottom=Math.max(bottom,window.innerHeight-rect.top+14);}
