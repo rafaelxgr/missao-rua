@@ -4,7 +4,7 @@
   const active=document.body.dataset.page||pages[file]||'inicio';
   const nav=[['inicio','index.html','Início'],['como-ajudar','como-ajudar.html','Como ajudar'],['transparencia','transparencia.html','Transparência'],['contato','contato.html','Contato'],['sobre','sobre.html','Sobre']];
   const instagram='https://www.instagram.com/missao.rua/';
-  const whatsapp='https://wa.me/551998675130?text=Ol%C3%A1%2C%20gostaria%20de%20falar%20com%20a%20Miss%C3%A3o%20Rua.';
+  const whatsapp='https://wa.me/5511998675130?text=Ol%C3%A1%2C%20gostaria%20de%20falar%20com%20a%20Miss%C3%A3o%20Rua.';
   const pixKey='214.794.088-75';
   const style=document.createElement('style');
   style.textContent=`
