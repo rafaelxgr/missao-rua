@@ -1,0 +1,49 @@
+name: Forcar atualizacao do cache
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/force-cache-bust.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  atualizar-cache:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Atualizar versao do components.js
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          import time
+
+          version = str(int(time.time()))
+          for path in Path('.').glob('*.html'):
+              text = path.read_text(encoding='utf-8')
+              updated = re.sub(
+                  r'assets/js/components\.js\?v=[^"\'\s<]+',
+                  f'assets/js/components.js?v={version}',
+                  text,
+              )
+              if updated != text:
+                  path.write_text(updated, encoding='utf-8')
+          print('Nova versao:', version)
+          PY
+
+      - name: Remover workflow temporario
+        run: rm .github/workflows/force-cache-bust.yml
+
+      - name: Commit da versao nova
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --cached --quiet || git commit -m "Atualizar cache das personalizacoes restauradas"
+          git push
