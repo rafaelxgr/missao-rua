@@ -1,0 +1,161 @@
+name: Corrigir SEO e indexacao
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/seo-indexacao.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  seo:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Aplicar SEO tecnico
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          import html
+
+          base = 'https://missaorua.com.br'
+          image = f'{base}/assets/img/Home_Ruas.jpeg'
+
+          pages = {
+              'index.html': {
+                  'title': 'Missão Rua | Ações solidárias e apoio a pessoas em situação de rua',
+                  'description': 'A Missão Rua realiza ações solidárias com alimentos, roupas, apoio e presença para pessoas em situação de vulnerabilidade. Conheça e ajude.',
+                  'canonical': f'{base}/',
+                  'og_type': 'website',
+              },
+              'como-ajudar.html': {
+                  'title': 'Como ajudar a Missão Rua | Doações e voluntariado',
+                  'description': 'Veja como apoiar a Missão Rua com alimentos, roupas, cobertores, Pix, parcerias, voluntariado e divulgação das ações solidárias.',
+                  'canonical': f'{base}/como-ajudar.html',
+                  'og_type': 'website',
+              },
+              'transparencia.html': {
+                  'title': 'Transparência e ações realizadas | Missão Rua',
+                  'description': 'Conheça registros das ações da Missão Rua, entregas realizadas e o trabalho desenvolvido com pessoas em situação de vulnerabilidade.',
+                  'canonical': f'{base}/transparencia.html',
+                  'og_type': 'website',
+              },
+              'contato.html': {
+                  'title': 'Contato, doações e parcerias | Missão Rua',
+                  'description': 'Entre em contato com a Missão Rua para doações, parcerias, voluntariado, apoio às ações e informações sobre o projeto social.',
+                  'canonical': f'{base}/contato.html',
+                  'og_type': 'website',
+              },
+              'sobre.html': {
+                  'title': 'Sobre a Missão Rua | Projeto social e ações solidárias',
+                  'description': 'Conheça a história, o propósito e as ações da Missão Rua, projeto social criado para levar alimento, apoio e dignidade a quem precisa.',
+                  'canonical': f'{base}/sobre.html',
+                  'og_type': 'website',
+              },
+          }
+
+          def replace_or_insert(text, pattern, replacement, anchor):
+              if re.search(pattern, text, flags=re.I | re.S):
+                  return re.sub(pattern, replacement, text, count=1, flags=re.I | re.S)
+              return text.replace(anchor, anchor + '\n  ' + replacement, 1)
+
+          for filename, meta in pages.items():
+              path = Path(filename)
+              text = path.read_text(encoding='utf-8')
+
+              text = re.sub(r'<title>.*?</title>', f"<title>{html.escape(meta['title'])}</title>", text, count=1, flags=re.I | re.S)
+              text = replace_or_insert(
+                  text,
+                  r'<meta\s+name=["\']description["\'][^>]*>',
+                  f'<meta name="description" content="{html.escape(meta["description"], quote=True)}">',
+                  re.search(r'<title>.*?</title>', text, flags=re.I | re.S).group(0),
+              )
+              text = replace_or_insert(
+                  text,
+                  r'<meta\s+name=["\']robots["\'][^>]*>',
+                  '<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">',
+                  re.search(r'<meta\s+name=["\']description["\'][^>]*>', text, flags=re.I).group(0),
+              )
+
+              text = re.sub(r'\n?\s*<!-- SEO TECNICO START -->.*?<!-- SEO TECNICO END -->\s*', '\n', text, flags=re.I | re.S)
+
+              seo = f'''  <!-- SEO TECNICO START -->
+  <link rel="canonical" href="{meta['canonical']}">
+  <meta property="og:locale" content="pt_BR">
+  <meta property="og:type" content="{meta['og_type']}">
+  <meta property="og:site_name" content="Missão Rua">
+  <meta property="og:title" content="{html.escape(meta['title'], quote=True)}">
+  <meta property="og:description" content="{html.escape(meta['description'], quote=True)}">
+  <meta property="og:url" content="{meta['canonical']}">
+  <meta property="og:image" content="{image}">
+  <meta property="og:image:alt" content="Ação solidária da Missão Rua">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{html.escape(meta['title'], quote=True)}">
+  <meta name="twitter:description" content="{html.escape(meta['description'], quote=True)}">
+  <meta name="twitter:image" content="{image}">
+  <!-- SEO TECNICO END -->
+'''
+
+              if filename == 'index.html':
+                  seo += '''  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Missão Rua",
+    "url": "https://missaorua.com.br/",
+    "logo": "https://missaorua.com.br/assets/img/Favicon_Missao.png",
+    "description": "Projeto social que realiza ações solidárias e leva alimento, apoio e presença a pessoas em situação de vulnerabilidade.",
+    "sameAs": ["https://www.instagram.com/missao.rua/"],
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "telephone": "+55-11-99867-5130",
+      "contactType": "atendimento",
+      "availableLanguage": "Portuguese"
+    }
+  }
+  </script>
+'''
+
+              text = text.replace('</head>', seo + '</head>', 1)
+              path.write_text(text, encoding='utf-8')
+
+          Path('robots.txt').write_text(
+              'User-agent: *\nAllow: /\n\nSitemap: https://missaorua.com.br/sitemap.xml\n',
+              encoding='utf-8',
+          )
+
+          urls = [
+              'https://missaorua.com.br/',
+              'https://missaorua.com.br/como-ajudar.html',
+              'https://missaorua.com.br/transparencia.html',
+              'https://missaorua.com.br/contato.html',
+              'https://missaorua.com.br/sobre.html',
+          ]
+          entries = '\n'.join(
+              f'  <url><loc>{url}</loc><lastmod>2026-07-21</lastmod></url>'
+              for url in urls
+          )
+          sitemap = f'''<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+{entries}
+</urlset>
+'''
+          Path('sitemap.xml').write_text(sitemap, encoding='utf-8')
+          PY
+
+      - name: Remover workflow temporario
+        run: rm .github/workflows/seo-indexacao.yml
+
+      - name: Commit das correcoes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --cached --quiet || git commit -m "Liberar indexacao e configurar SEO tecnico"
+          git push
